@@ -12,9 +12,15 @@ AS              = msp430-elf-as
 all: button.elf 
 
 #additional rules for files
-button.elf: ${COMMON_OBJECTS} ../11-buzzer-change-tone/buzzer.o modules.o  leds_and_switches.o ../../demos/lib/libTimer.a
+button.elf: ${COMMON_OBJECTS} events.o  ../11-buzzer-change-tone/buzzer.o modules.o  leds_and_switches.o ../../demos/lib/libTimer.a
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
+button-s.elf: ${COMMON_OBJECTS} events-s.o ../11-buzzer-change-tone/buzzer.o modules.o  leds_and_switches.o ../../demos/lib/libTimer.a
+	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
+
 load: button.elf
+	msp430loader.sh $^
+
+load-s: button-s.elf
 	msp430loader.sh $^
 
 clean:
