@@ -3,9 +3,9 @@
 #include "../11-buzzer-change-tone/buzzer.h"
 #include "../2-red-blink-quick/led.h"
 #include "modules.h"
+#include "events.h"
 
-
-static char switch_update_interrupt_sense()
+ char switch_update_interrupt_sense()
 {
 	char p2val = P2IN;
 
@@ -31,26 +31,5 @@ void switch_init(){
 void switch_interrupt_handler(){
 	
 	char p2val = switch_update_interrupt_sense();	/* switch is in P2 */
-	
-	//if a switch associated with the corresponding bit is pressed
-	 if(!(p2val & SW1)){ 	  //BIT0
-		start_module11();
-		start_module2();
-	 }
-	 else if(!(p2val & SW2)){ //BIT1
-	 	start_module1();
-	 }	 
-	 else if(!(p2val & SW3)){ //BIT2
-	 	start_module2();
-		buttonSound();
-	 }
-	 else if(!(p2val & SW4)){ //BIT3
-	 	start_module4();
-		buzzer_set_period(0);// turn off buzzer with SW4
-	 }
-	 else if(p2val & SW3){	      //SW3 released
-		buzzer_set_period(0); //turn off buttonSound()
-		P1OUT |= LED_RED;     //turn on red led
-		P1OUT &= ~LED_GREEN;
-	 }
+	events(p2val);	
 }
